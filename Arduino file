@@ -1,0 +1,131 @@
+int Left1 = 10;
+int Left2 = 5;
+int Right1 = 9;
+int Right2 = 6;
+int LEnc1 = 4;
+int LEnc2 = 2;
+int REnc1 = 3;
+int REnc2 = 7;
+volatile int Rencoder_val = 0;
+volatile int Lencoder_val = 0;
+int finalencodervalue = 0;
+int n = 200;// thershold speed
+float distance = 20.0;// distance on stright line
+int m = n - 2;
+int a = 200;// speed of motor 1
+int b = 200;// speed of motor 2
+volatile float d = 0;
+int WheelD = 66;
+float EncResolution = 408;
+float mmPerTick = (WheelD * 3.14) / EncResolution;
+float TickPermm = EncResolution / (WheelD * 3.14);
+float TotalTicks = (TickPermm * distance);
+float angle = m * 180 ;
+float rad = 180 - (angle / n);
+void IRS() {
+  Rencoder_val++;
+  d ++;
+}
+void setup() {
+  // put your setup code here, to run once:
+
+  pinMode (Right1, OUTPUT);
+  pinMode (Right2, OUTPUT);
+  pinMode (Left1, OUTPUT);
+  pinMode (Left2, OUTPUT);
+  pinMode (REnc1, INPUT_PULLUP);
+  pinMode (LEnc1, INPUT_PULLUP);
+  Serial.begin (9600);
+  attachInterrupt (digitalPinToInterrupt(REnc1), IRS, RISING);
+}
+void loop() {
+  if (Serial.available())
+  { switch (Serial.read()) {
+      case '1': strt(a, b, TotalTicks);
+        break;
+      case'2': strt1(a, b, TotalTicks);
+        break;
+      case'3': turn(a, b, 90);
+        break;
+      case'4': turn2(a, b, 90);
+        break;
+    }
+    Serial.write('1');
+    }
+}
+void strt(int velocity1, int velocity2, int distance)
+{
+  while (Rencoder_val <= distance) {
+    analogWrite (Left1, 0);
+    analogWrite (Left2, velocity1);
+    analogWrite (Right1, 0);
+    analogWrite (Right2, velocity2);
+  }
+  analogWrite (Left1, 255);
+  analogWrite (Left2, 255);
+  analogWrite (Right1, 255);
+  analogWrite (Right2, 255);
+  delay(100);
+  analogWrite (Left1, 0);
+  analogWrite (Left2, 0);
+  analogWrite (Right1, 0);
+  analogWrite (Right2, 0);
+  Rencoder_val = 0;
+}
+void turn(int velocity1, int velocity2,  int angle) {
+  finalencodervalue = (angle * ((160 * 3.14) / 360)) * (408 / (60 * 3.14));
+  while (Rencoder_val <= finalencodervalue) {
+    analogWrite (Left1, velocity1);
+    analogWrite (Left2, 0);
+    analogWrite (Right1, 0);
+    analogWrite (Right2, velocity2);
+  }
+  analogWrite (Left1, 255);
+  analogWrite (Left2, 255);
+  analogWrite (Right1, 255);
+  analogWrite (Right2, 255);
+  delay(100);
+  analogWrite (Left1, 0);
+  analogWrite (Left2, 0);
+  analogWrite (Right1, 0);
+  analogWrite (Right2, 0);
+  Rencoder_val = 0;
+}
+void strt1(int velocity1, int velocity2, int distance)
+{
+  while (Rencoder_val <= distance) {
+    analogWrite (Left2, 0);
+    analogWrite (Left1, velocity1);
+    analogWrite (Right2, 0);
+    analogWrite (Right1, velocity2);
+  }
+  analogWrite (Left1, 255);
+  analogWrite (Left2, 255);
+  analogWrite (Right1, 255);
+  analogWrite (Right2, 255);
+  delay(100);
+  analogWrite (Left1, 0);
+  analogWrite (Left2, 0);
+  analogWrite (Right1, 0);
+  analogWrite (Right2, 0);
+  Rencoder_val = 0;
+}
+void turn2(int velocity1, int velocity2,  int angle) {
+  finalencodervalue = (angle * ((160 * 3.14) / 360)) * (408 / (60 * 3.14));
+  while (Rencoder_val <= finalencodervalue) {
+    analogWrite (Left2, velocity1);
+    analogWrite (Left1, 0);
+    analogWrite (Right2, 0);
+    analogWrite (Right1, velocity2);
+  }
+  analogWrite (Left1, 255);
+  analogWrite (Left2, 255);
+  analogWrite (Right1, 255);
+  analogWrite (Right2, 255);
+  delay(100);
+  analogWrite (Left1, 0);
+  analogWrite (Left2, 0);
+  analogWrite (Right1, 0);
+  analogWrite (Right2, 0);
+  Rencoder_val = 0;
+}
