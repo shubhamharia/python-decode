@@ -15,6 +15,5 @@ while 1:
    ser.write(b'D') 
   if val ==5:
    ser.close() 
-   
  else:
-   print('enter a velid number')
+   print('enter a valid number')
