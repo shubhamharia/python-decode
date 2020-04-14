@@ -41,13 +41,13 @@ void setup() {
 void loop() {
   if (Serial.available())
   { switch (Serial.read()) {
-      case '1': strt(a, b, TotalTicks);
+      case 'A': strt(a, b, TotalTicks);
         break;
-      case'2': strt1(a, b, TotalTicks);
+      case'B': strt1(a, b, TotalTicks);
         break;
-      case'3': turn(a, b, 90);
+      case'C': turn(a, b, 90);
         break;
-      case'4': turn2(a, b, 90);
+      case'B': turn2(a, b, 90);
         break;
     }
     Serial.write('1');
