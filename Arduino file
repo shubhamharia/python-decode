@@ -50,7 +50,6 @@ void loop() {
       case'B': turn2(a, b, 90);
         break;
     }
-    Serial.write('1');
     }
 }
 void strt(int velocity1, int velocity2, int distance)
